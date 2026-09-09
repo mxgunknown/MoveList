@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f3ede4" />
+  <meta name="description" content="Our private room-by-room shopping list for the new house." />
+  <title>MoveList · Our Home</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="setupBanner" class="setup-banner" hidden>
+    <strong>Finish setup:</strong>
+    add your Supabase URL and public key to <code>config.js</code> before publishing.
+  </div>
+
+  <main id="authView" class="auth-page">
+    <section class="auth-story">
+      <div class="auth-story-inner">
+        <span class="eyebrow light">OUR NEW HOME</span>
+        <h1>A home we’re building together, one little choice at a time. 🏡</h1>
+        <p>
+          Keep every purchase in one place, from the essentials we both need to the
+          things on our own wish lists.
+        </p>
+
+        <div class="mini-plan-stack" aria-hidden="true">
+          <figure class="mini-plan mini-plan-one">
+            <img src="assets/ground-floor.png" alt="" />
+          </figure>
+          <figure class="mini-plan mini-plan-two">
+            <img src="assets/first-floor.png" alt="" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <div class="brand-lockup">
+          <div class="brand-mark">⌂</div>
+          <div>
+            <strong>MoveList</strong>
+            <span>Our Home</span>
+          </div>
+        </div>
+
+        <div class="auth-copy">
+          <span class="eyebrow">WELCOME HOME</span>
+          <h2>Sign in</h2>
+          <p>Your lists are safely saved online and follow you to every device.</p>
+        </div>
+
+        <form id="loginForm" class="form-stack">
+          <label class="field">
+            <span>Email address</span>
+            <input id="loginEmail" type="email" autocomplete="username" required placeholder="you@example.com" />
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••" />
+          </label>
+
+          <p id="loginError" class="form-error" hidden></p>
+          <button class="button button-primary button-full" type="submit">Sign in</button>
+        </form>
+
+        <p class="auth-note">Accounts are created by the house admin — there’s no public sign-up.</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="appView" hidden>
+    <header class="app-header">
+      <div class="header-inner">
+        <button id="homeButton" class="brand-button" type="button" aria-label="Go to home">
+          <span class="brand-mark small">⌂</span>
+          <span class="brand-text">
+            <strong>MoveList</strong>
+            <small>Our Home</small>
+          </span>
+        </button>
+
+        <nav class="list-switcher" aria-label="Choose a list">
+          <button class="list-tab active" data-list="shared" type="button">
+            <span>♥</span>
+            Shared list
+          </button>
+          <button class="list-tab" data-list="personal" type="button">
+            <span>☺</span>
+            <span id="personalTabLabel">My list</span>
+          </button>
+        </nav>
+
+        <div class="header-actions">
+          <button id="adminButton" class="button button-secondary" type="button" hidden>Admin</button>
+          <button id="accountButton" class="account-button" type="button">
+            <span id="accountInitials" class="avatar">M</span>
+            <span class="account-copy">
+              <strong id="accountName">Account</strong>
+              <small>Account</small>
+            </span>
+            <span>⌄</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="milestone-hero">
+        <div class="milestone-copy">
+          <span class="eyebrow">A BIG MILESTONE ✨</span>
+          <h1 id="welcomeTitle">Welcome home.</h1>
+          <p>
+            This is the place for all the things that will turn the floor plan into
+            <em>our</em> home — room by room, purchase by purchase.
+          </p>
+          <div class="hero-actions">
+            <button id="heroAddItem" class="button button-primary" type="button">+ Add an item</button>
+            <button id="showPlansButton" class="button button-soft" type="button">View our floor plans</button>
+          </div>
+        </div>
+
+        <div class="milestone-card">
+          <span class="milestone-card-label">CURRENT LIST</span>
+          <strong id="heroListName">Shared list</strong>
+          <div class="big-progress-row">
+            <div id="progressRing" class="progress-ring"><span id="progressPercent">0%</span></div>
+            <div>
+              <b id="progressText">Nothing here yet</b>
+              <small id="progressSubtext">Add your first item to get started.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="floorPlansSection" class="floorplans-section">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">OUR HOUSE</span>
+            <h2>The floor plans</h2>
+            <p>Tap a room below a plan to jump straight to the things we need for it.</p>
+          </div>
+          <button id="hidePlansButton" class="button button-ghost" type="button">Hide plans</button>
+        </div>
+
+        <div class="floorplan-grid">
+          <article class="floorplan-card">
+            <div class="floorplan-title">
+              <div>
+                <span>01</span>
+                <h3>Ground floor</h3>
+              </div>
+              <small>Living, dining, kitchen & more</small>
+            </div>
+            <button class="plan-image-button" data-plan-src="assets/ground-floor.png" data-plan-title="Ground floor" type="button">
+              <img src="assets/ground-floor.png" alt="Ground floor plan of our new house" />
+              <span>Tap to enlarge</span>
+            </button>
+            <div class="room-pills">
+              <button data-room-jump="Living / Dining" type="button">Living / Dining</button>
+              <button data-room-jump="Kitchen" type="button">Kitchen</button>
+              <button data-room-jump="Hall" type="button">Hall</button>
+              <button data-room-jump="Downstairs WC" type="button">Downstairs WC</button>
+              <button data-room-jump="Ground Floor Store" type="button">Store</button>
+            </div>
+          </article>
+
+          <article class="floorplan-card">
+            <div class="floorplan-title">
+              <div>
+                <span>02</span>
+                <h3>First floor</h3>
+              </div>
+              <small>Bedrooms, bathroom & en suite</small>
+            </div>
+            <button class="plan-image-button" data-plan-src="assets/first-floor.png" data-plan-title="First floor" type="button">
+              <img src="assets/first-floor.png" alt="First floor plan of our new house" />
+              <span>Tap to enlarge</span>
+            </button>
+            <div class="room-pills">
+              <button data-room-jump="Bedroom 1" type="button">Bedroom 1</button>
+              <button data-room-jump="En Suite" type="button">En Suite</button>
+              <button data-room-jump="Bedroom 2" type="button">Bedroom 2</button>
+              <button data-room-jump="Bedroom 3" type="button">Bedroom 3</button>
+              <button data-room-jump="Bathroom" type="button">Bathroom</button>
+              <button data-room-jump="First Floor Store" type="button">Store</button>
+            </div>
+          </article>
+
+          <article class="office-card">
+            <div class="office-icon">⌨</div>
+            <div>
+              <span class="eyebrow">BONUS ROOM</span>
+              <h3>Garage → Office</h3>
+              <p>The office isn’t on the original floor plan, so it gets its own special spot here.</p>
+            </div>
+            <button class="button button-soft" data-room-jump="Office" type="button">Open Office list →</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="List summary">
+        <article class="stat-card">
+          <span>Items</span>
+          <strong id="statItems">0</strong>
+          <small id="statItemsSub">0 arrived</small>
+        </article>
+        <article class="stat-card">
+          <span>Estimated total</span>
+          <strong id="statEstimated">£0.00</strong>
+          <small>Based on saved estimates</small>
+        </article>
+        <article class="stat-card">
+          <span>Actual spend</span>
+          <strong id="statSpent">£0.00</strong>
+          <small>Prices confirmed so far</small>
+        </article>
+        <article class="stat-card">
+          <span>Still to buy</span>
+          <strong id="statRemaining">£0.00</strong>
+          <small>Estimated cost not yet arrived</small>
+        </article>
+      </section>
+
+      <section class="shopping-section">
+        <div class="section-heading list-heading">
+          <div>
+            <span class="eyebrow">SHOPPING</span>
+            <h2 id="listHeading">Shared list</h2>
+            <p id="listDescription">Things anyone in the house can add to and update.</p>
+          </div>
+          <button id="addItemButton" class="button button-primary" type="button">+ Add item</button>
+        </div>
+
+        <div class="toolbar">
+          <label class="search-box">
+            <span>⌕</span>
+            <input id="searchInput" type="search" placeholder="Search items, rooms or notes…" />
+          </label>
+
+          <select id="roomFilter" aria-label="Filter by room">
+            <option value="all">All rooms</option>
+          </select>
+
+          <select id="statusFilter" aria-label="Filter by status">
+            <option value="all">All statuses</option>
+            <option value="to-buy">Need to buy</option>
+            <option value="researching">Researching</option>
+            <option value="ordered">Ordered</option>
+            <option value="arrived">Arrived</option>
+          </select>
+
+          <select id="priorityFilter" aria-label="Filter by priority">
+            <option value="all">All priorities</option>
+            <option value="high">High priority</option>
+            <option value="medium">Medium priority</option>
+            <option value="low">Low priority</option>
+          </select>
+
+          <select id="sortSelect" aria-label="Sort items">
+            <option value="newest">Newest first</option>
+            <option value="priority">Priority</option>
+            <option value="room">Room A–Z</option>
+            <option value="name">Item A–Z</option>
+            <option value="price-high">Price high–low</option>
+            <option value="price-low">Price low–high</option>
+          </select>
+        </div>
+
+        <div id="roomSummary" class="room-summary"></div>
+        <p id="resultsLabel" class="results-label">0 items</p>
+        <section id="itemsGrid" class="items-grid" aria-live="polite"></section>
+
+        <section id="emptyState" class="empty-state" hidden>
+          <div>🛋️</div>
+          <h3>No items here yet</h3>
+          <p>Perfect excuse to start planning something nice for the house.</p>
+          <button id="emptyAddButton" class="button button-primary" type="button">Add the first item</button>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="itemDialog" class="modal">
+    <form id="itemForm">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">ITEM DETAILS</span>
+          <h2 id="itemDialogTitle">Add item</h2>
+          <p id="itemListHint">Adding to the shared list.</p>
+        </div>
+        <button class="icon-button" data-close="itemDialog" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="field field-wide">
+          <span>Item name *</span>
+          <input id="itemName" required maxlength="120" placeholder="e.g. Dining table" />
+        </label>
+        <label class="field">
+          <span>Room *</span>
+          <select id="itemRoom" required></select>
+        </label>
+        <label class="field">
+          <span>Priority</span>
+          <select id="itemPriority">
+            <option value="high">High</option>
+            <option value="medium" selected>Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Status</span>
+          <select id="itemStatus">
+            <option value="to-buy" selected>Need to buy</option>
+            <option value="researching">Researching</option>
+            <option value="ordered">Ordered</option>
+            <option value="arrived">Arrived</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Quantity</span>
+          <input id="itemQuantity" type="number" min="1" step="1" value="1" />
+        </label>
+        <label class="field">
+          <span>Estimated unit price</span>
+          <input id="itemEstimatedPrice" type="number" min="0" step="0.01" placeholder="0.00" />
+        </label>
+        <label class="field">
+          <span>Actual unit price</span>
+          <input id="itemActualPrice" type="number" min="0" step="0.01" placeholder="0.00" />
+        </label>
+        <label class="field field-wide">
+          <span>Product URL</span>
+          <input id="itemUrl" type="url" placeholder="https://…" />
+        </label>
+        <label class="field field-wide">
+          <span>Notes</span>
+          <textarea id="itemNotes" rows="4" maxlength="800" placeholder="Colour, measurements, alternatives, ideas…"></textarea>
+        </label>
+      </div>
+
+      <p id="itemError" class="form-error" hidden></p>
+      <div class="modal-actions">
+        <button class="button button-secondary" data-close="itemDialog" type="button">Cancel</button>
+        <button id="saveItemButton" class="button button-primary" type="submit">Save item</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="adminDialog" class="modal modal-small">
+    <form id="createUserForm">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">HOUSE ADMIN</span>
+          <h2>Create an account</h2>
+          <p>New accounts can sign in immediately with the temporary password you choose.</p>
+        </div>
+        <button class="icon-button" data-close="adminDialog" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="form-stack">
+        <label class="field">
+          <span>Name</span>
+          <input id="newUserName" required maxlength="80" placeholder="e.g. Max" />
+        </label>
+        <label class="field">
+          <span>Email address</span>
+          <input id="newUserEmail" type="email" required placeholder="name@example.com" />
+        </label>
+        <label class="field">
+          <span>Temporary password</span>
+          <input id="newUserPassword" type="password" minlength="8" required placeholder="At least 8 characters" />
+        </label>
+      </div>
+
+      <p id="adminError" class="form-error" hidden></p>
+      <p id="adminSuccess" class="form-success" hidden></p>
+      <div class="modal-actions">
+        <button class="button button-secondary" data-close="adminDialog" type="button">Close</button>
+        <button id="createUserButton" class="button button-primary" type="submit">Create account</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="accountDialog" class="modal modal-small">
+    <form id="accountForm">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">YOUR ACCOUNT</span>
+          <h2 id="accountDialogName">Account</h2>
+          <p id="accountDialogEmail"></p>
+        </div>
+        <button class="icon-button" data-close="accountDialog" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="form-stack">
+        <label class="field">
+          <span>Display name</span>
+          <input id="profileDisplayName" required maxlength="80" />
+        </label>
+        <label class="field">
+          <span>New password <small>(leave blank to keep current password)</small></span>
+          <input id="profileNewPassword" type="password" minlength="8" placeholder="New password" />
+        </label>
+      </div>
+
+      <p id="accountError" class="form-error" hidden></p>
+      <p id="accountSuccess" class="form-success" hidden></p>
+      <div class="modal-actions account-modal-actions">
+        <button id="signOutButton" class="button button-danger" type="button">Sign out</button>
+        <div>
+          <button class="button button-secondary" data-close="accountDialog" type="button">Cancel</button>
+          <button class="button button-primary" type="submit">Save changes</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="planDialog" class="plan-dialog">
+    <div class="plan-dialog-header">
+      <div>
+        <span class="eyebrow">OUR HOME</span>
+        <h2 id="planDialogTitle">Floor plan</h2>
+      </div>
+      <button class="icon-button" data-close="planDialog" type="button" aria-label="Close">×</button>
+    </div>
+    <img id="planDialogImage" src="" alt="" />
+  </dialog>
+
+  <template id="itemTemplate">
+    <article class="item-card">
+      <div class="item-topline">
+        <span class="room-pill"></span>
+        <span class="priority-pill"></span>
+      </div>
+      <div class="item-content">
+        <div class="item-title-row">
+          <div>
+            <h3 class="item-name"></h3>
+            <p class="item-meta"></p>
+          </div>
+          <span class="status-pill"></span>
+        </div>
+        <p class="item-notes"></p>
+        <a class="product-link" target="_blank" rel="noopener noreferrer">
+          <span>Open product</span><span>↗</span>
+        </a>
+      </div>
+      <div class="item-footer">
+        <div class="price-block">
+          <span>Estimated</span>
+          <strong class="item-price"></strong>
+        </div>
+        <div class="card-actions">
+          <button class="button button-success quick-arrived" type="button">✓ Arrived</button>
+          <button class="icon-button edit-button" type="button" aria-label="Edit item">✎</button>
+          <button class="icon-button delete-button" type="button" aria-label="Delete item">🗑</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
